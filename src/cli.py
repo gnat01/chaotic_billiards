@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 
 from engine import run_simulation
-from geometry import SUPPORTED_GEOMETRIES, Rectangle, build_geometry
+from geometry import SUPPORTED_GEOMETRIES, build_geometry
 from model import BallState, SimulationConfig
 from visualization import show_animation
 
@@ -14,6 +14,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--width", type=float, default=10.0)
     parser.add_argument("--height", type=float, default=6.0)
     parser.add_argument("--side-length", type=float, default=10.0)
+    parser.add_argument("--circle-radius", type=float, default=5.0)
+    parser.add_argument("--obstacle-radius", type=float, default=None)
+    parser.add_argument("--obstacle-x", type=float, default=None)
+    parser.add_argument("--obstacle-y", type=float, default=None)
     parser.add_argument("--ball-radius", type=float, default=0.35)
     parser.add_argument("--start-x", type=float, default=2.0)
     parser.add_argument("--start-y", type=float, default=2.0)
@@ -36,6 +40,13 @@ def main() -> None:
         width=args.width,
         height=args.height,
         side_length=args.side_length,
+        circle_radius=args.circle_radius,
+        obstacle_radius=args.obstacle_radius,
+        obstacle_center=(
+            (args.obstacle_x, args.obstacle_y)
+            if args.obstacle_x is not None and args.obstacle_y is not None
+            else None
+        ),
     )
 
     if not 0.0 < args.ball_radius:
@@ -63,6 +74,11 @@ def main() -> None:
     print(f"geometry={geometry.name}")
     if hasattr(geometry, "width") and hasattr(geometry, "height"):
         print(f"table={getattr(geometry, 'width')} x {getattr(geometry, 'height')}")
+    if hasattr(geometry, "radius"):
+        print(f"table_radius={getattr(geometry, 'radius')}")
+    if hasattr(geometry, "obstacle_radius"):
+        print(f"obstacle_radius={getattr(geometry, 'obstacle_radius')}")
+        print(f"obstacle_center={getattr(geometry, 'obstacle_center')}")
     print(f"ball_radius={args.ball_radius}")
     print(f"start=({args.start_x}, {args.start_y})")
     print(f"velocity=({args.vx}, {args.vy})")

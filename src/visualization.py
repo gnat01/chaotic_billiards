@@ -4,9 +4,9 @@ from dataclasses import dataclass
 
 import matplotlib.animation as animation
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle, Rectangle as RectanglePatch
+from matplotlib.patches import Circle, Polygon, Rectangle as RectanglePatch
 
-from geometry import Rectangle, Square
+from geometry import CircleTable, Rectangle, SinaiTable, Square, StadiumTable, Triangle
 from model import RunResult, Vec2
 
 
@@ -65,22 +65,104 @@ def _add_geometry_patch(ax: plt.Axes, geometry: object) -> None:
         )
         ax.add_patch(patch)
         return
-    if isinstance(geometry, Square):
-        patch = RectanglePatch(
-            geometry.origin,
-            geometry.width,
-            geometry.height,
-            fill=False,
-            linewidth=2.0,
-            edgecolor="black",
+    if isinstance(geometry, CircleTable):
+        ax.add_patch(
+            Circle(
+                geometry.center,
+                geometry.radius,
+                fill=False,
+                linewidth=2.0,
+                edgecolor="black",
+            )
         )
-        ax.add_patch(patch)
+        return
+    if isinstance(geometry, Triangle):
+        ax.add_patch(
+            Polygon(
+                geometry.vertices,
+                closed=True,
+                fill=False,
+                linewidth=2.0,
+                edgecolor="black",
+            )
+        )
+        return
+    if isinstance(geometry, SinaiTable):
+        ax.add_patch(
+            RectanglePatch(
+                geometry.origin,
+                geometry.width,
+                geometry.height,
+                fill=False,
+                linewidth=2.0,
+                edgecolor="black",
+            )
+        )
+        ax.add_patch(
+            Circle(
+                geometry.obstacle_center,
+                geometry.obstacle_radius,
+                fill=False,
+                linewidth=2.0,
+                edgecolor="#8d0801",
+            )
+        )
+        return
+    if isinstance(geometry, StadiumTable):
+        ax.add_patch(
+            RectanglePatch(
+                (geometry.left_cap_center[0], geometry.bottom),
+                geometry.right_cap_center[0] - geometry.left_cap_center[0],
+                geometry.height,
+                fill=False,
+                linewidth=2.0,
+                edgecolor="black",
+            )
+        )
+        ax.add_patch(
+            Circle(
+                geometry.left_cap_center,
+                geometry.cap_radius,
+                fill=False,
+                linewidth=2.0,
+                edgecolor="black",
+            )
+        )
+        ax.add_patch(
+            Circle(
+                geometry.right_cap_center,
+                geometry.cap_radius,
+                fill=False,
+                linewidth=2.0,
+                edgecolor="black",
+            )
+        )
         return
     raise NotImplementedError(f"No renderer for geometry type: {type(geometry).__name__}")
 
 
 def _set_axes_limits(ax: plt.Axes, geometry: object, padding: float = 0.5) -> None:
     if isinstance(geometry, Rectangle):
+        ax.set_xlim(geometry.left - padding, geometry.right + padding)
+        ax.set_ylim(geometry.bottom - padding, geometry.top + padding)
+        ax.set_aspect("equal", adjustable="box")
+        return
+    if isinstance(geometry, CircleTable):
+        ax.set_xlim(geometry.left - padding, geometry.right + padding)
+        ax.set_ylim(geometry.bottom - padding, geometry.top + padding)
+        ax.set_aspect("equal", adjustable="box")
+        return
+    if isinstance(geometry, Triangle):
+        ax.set_xlim(geometry.left - padding, geometry.right + padding)
+        ax.set_ylim(geometry.bottom - padding, geometry.top + padding)
+        ax.set_aspect("equal", adjustable="box")
+        return
+    if isinstance(geometry, SinaiTable):
+        ax.set_xlim(geometry.left - padding, geometry.right + padding)
+        ax.set_ylim(geometry.bottom - padding, geometry.top + padding)
+        ax.set_aspect("equal", adjustable="box")
+        return
+    if isinstance(geometry, StadiumTable):
         ax.set_xlim(geometry.left - padding, geometry.right + padding)
         ax.set_ylim(geometry.bottom - padding, geometry.top + padding)
         ax.set_aspect("equal", adjustable="box")

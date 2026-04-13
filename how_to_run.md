@@ -90,8 +90,7 @@ Accepted values:
 
 Current status:
 
-- implemented: `rectangle`, `square`
-- planned but not implemented yet: `circle`, `sinai`, `triangle`, `stadium`
+- implemented: `rectangle`, `square`, `circle`, `triangle`, `sinai`, `stadium`
 
 Hard constraint:
 
@@ -99,7 +98,8 @@ Hard constraint:
 
 Recommended usage:
 
-- use `rectangle` or `square` right now
+- start with `rectangle` or `square`
+- `circle`, `triangle`, and `sinai` are now runnable
 
 ### `--width`
 
@@ -112,6 +112,8 @@ Default:
 Used by:
 
 - `rectangle`
+- `triangle`
+- `sinai`
 
 Hard constraint:
 
@@ -124,6 +126,7 @@ Recommended range:
 Notes:
 
 - ignored for `square`
+- ignored for `circle`
 - larger values make horizontal travel longer and reduce apparent bounce frequency for the same velocity
 
 ### `--height`
@@ -137,6 +140,8 @@ Default:
 Used by:
 
 - `rectangle`
+- `triangle`
+- `sinai`
 
 Hard constraint:
 
@@ -149,6 +154,7 @@ Recommended range:
 Notes:
 
 - ignored for `square`
+- ignored for `circle`
 
 ### `--side-length`
 
@@ -173,6 +179,104 @@ Recommended range:
 Notes:
 
 - ignored for `rectangle`
+- ignored for `triangle`
+- ignored for `sinai`
+
+### `--circle-radius`
+
+Type: float
+
+Default:
+
+- `5.0`
+
+Used by:
+
+- `circle`
+
+Hard constraint:
+
+- must be `> 0`
+
+Recommended range:
+
+- `3` to `15`
+
+Notes:
+
+- ignored for `rectangle`, `square`, `triangle`, and `sinai`
+- the circle is centered at `(circle-radius, circle-radius)` by default
+- larger values require adjusting start position if you want the ball to begin near the visual center
+
+### `--obstacle-radius`
+
+Type: float or omitted
+
+Default:
+
+- `None`
+
+Used by:
+
+- `sinai`
+
+Hard constraint:
+
+- if provided, must be `> 0`
+
+Effective default when omitted:
+
+- `0.18 * min(width, height)`
+
+Recommended range:
+
+- `0.5` to `2.0` for a `10 x 6` outer table
+
+Notes:
+
+- ignored for other geometries
+- if you make this too large, the valid starting region shrinks quickly
+
+### `--obstacle-x`
+
+Type: float or omitted
+
+Default:
+
+- `None`
+
+Used by:
+
+- `sinai`
+
+Hard constraint:
+
+- if set, it should place the obstacle center far enough from the walls for the chosen obstacle radius and ball radius
+
+Notes:
+
+- `--obstacle-x` and `--obstacle-y` should be provided together
+- if both are omitted, the obstacle is centered in the rectangle
+
+### `--obstacle-y`
+
+Type: float or omitted
+
+Default:
+
+- `None`
+
+Used by:
+
+- `sinai`
+
+Hard constraint:
+
+- same practical rule as `--obstacle-x`
+
+Notes:
+
+- `--obstacle-x` and `--obstacle-y` should be provided together
 
 ### `--ball-radius`
 
@@ -195,6 +299,9 @@ Recommended range:
 
 - rectangle `10 x 6`: `0.15` to `0.75`
 - square `10 x 10`: `0.15` to `1.0`
+- circle radius `5`: `0.15` to `0.8`
+- triangle `10 x 6`: `0.1` to `0.5`
+- sinai `10 x 6`: `0.1` to `0.4` with the default obstacle
 
 Notes:
 
@@ -221,6 +328,18 @@ For the default square:
 
 - valid range is `[0.35, 9.65]`
 
+For the default circle:
+
+- valid range depends on `start-y`; the center must lie inside the reduced disk of radius `circle-radius - ball-radius`
+
+For the default triangle:
+
+- valid range depends on `start-y`; the valid region narrows as `y` increases toward the apex
+
+For the default Sinai table:
+
+- valid range also depends on the obstacle position and obstacle radius
+
 Notes:
 
 - if this is outside the allowed center region, the program raises a `ValueError`
@@ -244,6 +363,18 @@ For the default rectangle:
 For the default square:
 
 - valid range is `[0.35, 9.65]`
+
+For the default circle:
+
+- valid range depends on `start-x`; the center must lie inside the reduced disk of radius `circle-radius - ball-radius`
+
+For the default triangle:
+
+- valid range depends on `start-x`; the triangle narrows toward the apex
+
+For the default Sinai table:
+
+- valid range also depends on the obstacle
 
 Notes:
 
@@ -507,6 +638,68 @@ Good starting values:
 - `0.9`
 - `0.95`
 
+## Geometry-Specific Examples
+
+### Circle
+
+```bash
+PYTHONPATH=src python src/cli.py \
+  --geometry circle \
+  --circle-radius 5 \
+  --ball-radius 0.35 \
+  --start-x 2.0 \
+  --start-y 2.0 \
+  --vx 3.0 \
+  --vy 1.75 \
+  --max-time 12
+```
+
+### Triangle
+
+```bash
+PYTHONPATH=src python src/cli.py \
+  --geometry triangle \
+  --width 10 \
+  --height 8 \
+  --ball-radius 0.25 \
+  --start-x 5.0 \
+  --start-y 2.0 \
+  --vx 2.2 \
+  --vy 2.8 \
+  --max-time 12
+```
+
+### Sinai
+
+```bash
+PYTHONPATH=src python src/cli.py \
+  --geometry sinai \
+  --width 10 \
+  --height 6 \
+  --obstacle-radius 1.0 \
+  --ball-radius 0.25 \
+  --start-x 2.0 \
+  --start-y 2.0 \
+  --vx 3.0 \
+  --vy 1.75 \
+  --max-time 12
+```
+
+### Stadium
+
+```bash
+PYTHONPATH=src python src/cli.py \
+  --geometry stadium \
+  --width 12 \
+  --height 6 \
+  --ball-radius 0.35 \
+  --start-x 4.0 \
+  --start-y 3.0 \
+  --vx 3.2 \
+  --vy 1.4 \
+  --max-time 12
+```
+
 ## Best Starting Settings
 
 If you just want something that feels good on screen, start here:
@@ -548,16 +741,13 @@ PYTHONPATH=src python src/cli.py \
 
 ## Current Gaps
 
-The CLI already exposes the geometry names you said you want to support long term, but right now only these are runnable:
+These are runnable now:
 
 - `rectangle`
 - `square`
-
-These are registered but not yet implemented:
-
 - `circle`
-- `sinai`
 - `triangle`
+- `sinai`
 - `stadium`
 
 If you pass one of those today, the program will raise `NotImplementedError`.
@@ -578,10 +768,14 @@ These are not exposed yet, but are obvious next additions:
 
 ```bash
 PYTHONPATH=src python src/cli.py \
-  --geometry rectangle|square \
+  --geometry rectangle|square|circle|triangle|sinai|stadium \
   --width FLOAT \
   --height FLOAT \
   --side-length FLOAT \
+  --circle-radius FLOAT \
+  --obstacle-radius FLOAT \
+  --obstacle-x FLOAT \
+  --obstacle-y FLOAT \
   --ball-radius FLOAT \
   --start-x FLOAT \
   --start-y FLOAT \
