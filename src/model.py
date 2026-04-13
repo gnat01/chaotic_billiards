@@ -35,6 +35,8 @@ class SimulationConfig:
     max_collisions: int = 100
     min_speed: float = 1e-9
     epsilon: float = 1e-9
+    reflection_mode: Literal["elastic", "inelastic"] = "elastic"
+    restitution: float = 1.0
 
 
 @dataclass(frozen=True)

@@ -27,3 +27,25 @@ def reflect_specular(velocity: Vec2, normal: Vec2) -> Vec2:
         velocity[0] - (2.0 * normal_component * unit_normal[0]),
         velocity[1] - (2.0 * normal_component * unit_normal[1]),
     )
+
+
+def reflect_inelastic(velocity: Vec2, normal: Vec2, restitution: float) -> Vec2:
+    """Reflect velocity with restitution applied to the wall-normal component."""
+
+    if not 0.0 <= restitution <= 1.0:
+        raise ValueError("Restitution must be between 0 and 1")
+
+    unit_normal = normalize(normal)
+    normal_component = dot(velocity, unit_normal)
+    tangential = (
+        velocity[0] - (normal_component * unit_normal[0]),
+        velocity[1] - (normal_component * unit_normal[1]),
+    )
+    reflected_normal = (
+        -restitution * normal_component * unit_normal[0],
+        -restitution * normal_component * unit_normal[1],
+    )
+    return (
+        tangential[0] + reflected_normal[0],
+        tangential[1] + reflected_normal[1],
+    )

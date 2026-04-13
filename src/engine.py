@@ -5,7 +5,7 @@ from dataclasses import replace
 from geometry import Geometry
 from model import BallState, CollisionEvent, RunResult, SimulationConfig
 from recorder import SimulationRecorder
-from reflection import reflect_specular
+from reflection import reflect_inelastic, reflect_specular
 from stopping import should_stop
 
 
@@ -34,6 +34,8 @@ def run_simulation(
     config: SimulationConfig | None = None,
 ) -> RunResult:
     config = config or SimulationConfig()
+    if config.reflection_mode not in {"elastic", "inelastic"}:
+        raise ValueError(f"Unsupported reflection mode: {config.reflection_mode}")
     if not geometry.contains_ball(initial_state.position, initial_state.radius):
         raise ValueError("Initial ball state is not valid for the geometry")
 
@@ -70,7 +72,14 @@ def run_simulation(
             return recorder.build_result("max_time")
 
         contact_state = _state_at_contact(state, event)
-        reflected_velocity = reflect_specular(contact_state.velocity, event.normal)
+        if config.reflection_mode == "elastic":
+            reflected_velocity = reflect_specular(contact_state.velocity, event.normal)
+        else:
+            reflected_velocity = reflect_inelastic(
+                contact_state.velocity,
+                event.normal,
+                restitution=config.restitution,
+            )
         state = replace(
             contact_state,
             velocity=reflected_velocity,

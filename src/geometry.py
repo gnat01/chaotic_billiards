@@ -153,3 +153,30 @@ class Square(Rectangle):
     @property
     def name(self) -> str:
         return "square"
+
+
+SUPPORTED_GEOMETRIES = (
+    "square",
+    "rectangle",
+    "circle",
+    "sinai",
+    "triangle",
+    "stadium",
+)
+
+
+def build_geometry(
+    geometry_name: str,
+    *,
+    width: float = 10.0,
+    height: float = 6.0,
+    side_length: float = 10.0,
+    origin: Vec2 = (0.0, 0.0),
+) -> Geometry:
+    if geometry_name == "rectangle":
+        return Rectangle(width=width, height=height, origin=origin)
+    if geometry_name == "square":
+        return Square(side_length=side_length, origin=origin)
+    if geometry_name in {"circle", "sinai", "triangle", "stadium"}:
+        raise NotImplementedError(f"Geometry '{geometry_name}' is planned but not implemented yet")
+    raise ValueError(f"Unknown geometry: {geometry_name}")
