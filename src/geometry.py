@@ -128,7 +128,38 @@ def _first_polygon_contact(
     if not candidates:
         return None
 
-    return min(candidates, key=lambda event: event.time_to_contact)
+    return _merge_simultaneous_contacts(candidates, epsilon)
+
+
+def _merge_simultaneous_contacts(
+    candidates: list[CollisionEvent],
+    epsilon: float,
+) -> CollisionEvent:
+    earliest = min(candidates, key=lambda event: event.time_to_contact)
+    simultaneous = [
+        event
+        for event in candidates
+        if abs(event.time_to_contact - earliest.time_to_contact) <= epsilon
+    ]
+    if len(simultaneous) == 1:
+        return earliest
+
+    merged_normal = (
+        sum(event.normal[0] for event in simultaneous),
+        sum(event.normal[1] for event in simultaneous),
+    )
+    merged_contact_point = (
+        sum(event.contact_point[0] for event in simultaneous) / len(simultaneous),
+        sum(event.contact_point[1] for event in simultaneous) / len(simultaneous),
+    )
+    merged_label = "+".join(sorted(event.boundary_label or "" for event in simultaneous))
+    return CollisionEvent(
+        time_to_contact=earliest.time_to_contact,
+        center_at_contact=earliest.center_at_contact,
+        contact_point=merged_contact_point,
+        normal=merged_normal,
+        boundary_label=merged_label,
+    )
 
 
 class Rectangle(Geometry):
@@ -246,7 +277,7 @@ class Rectangle(Geometry):
         if not candidates:
             return None
 
-        return min(candidates, key=lambda event: event.time_to_contact)
+        return _merge_simultaneous_contacts(candidates, epsilon)
 
 
 class Square(Rectangle):

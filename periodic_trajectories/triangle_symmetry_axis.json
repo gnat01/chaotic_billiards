@@ -1,0 +1,15 @@
+{
+  "name": "triangle_symmetry_axis",
+  "geometry": "triangle",
+  "width": 10.0,
+  "height": 8.0,
+  "ball_radius": 0.25,
+  "start_x": 5.0,
+  "start_y": 2.0,
+  "launch_angle_deg": 90.0,
+  "speed": 2.5,
+  "max_time": 12.0,
+  "reflection_mode": "elastic",
+  "description": "Up-down symmetry-axis orbit in the isosceles triangle. This is the cleanest periodic triangle example in the current geometry set.",
+  "command": "PYTHONPATH=src python src/cli.py --geometry triangle --width 10 --height 8 --ball-radius 0.25 --start-x 5 --start-y 2 --launch-angle-deg 90 --speed 2.5 --max-time 12 --reflection-mode elastic"
+}

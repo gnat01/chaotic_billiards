@@ -59,3 +59,23 @@ def test_square_runs_inside_event_driven_engine() -> None:
     assert result.states[1].velocity == (-2.0, 1.0)
     assert result.final_state.position == (5.0, 9.0)
     assert result.final_state.velocity == (-2.0, -1.0)
+
+
+def test_square_diagonal_corner_hit_reflects_off_both_walls() -> None:
+    geometry = Square(side_length=10.0)
+    initial_state = BallState(position=(5.0, 5.0), velocity=(3.0, 3.0), radius=0.35)
+
+    result = run_simulation(
+        initial_state=initial_state,
+        geometry=geometry,
+        config=SimulationConfig(max_time=4.0, max_collisions=4),
+    )
+
+    assert result.collisions
+    first_collision = result.collisions[0]
+    assert first_collision.boundary_label == "right_wall+top_wall"
+    assert math.isclose(first_collision.center_at_contact[0], 9.65)
+    assert math.isclose(first_collision.center_at_contact[1], 9.65)
+    assert math.isclose(result.states[1].velocity[0], -3.0)
+    assert math.isclose(result.states[1].velocity[1], -3.0)
+    assert geometry.contains_ball(result.final_state.position, initial_state.radius)

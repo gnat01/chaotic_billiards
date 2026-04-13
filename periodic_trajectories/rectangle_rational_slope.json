@@ -1,0 +1,15 @@
+{
+  "name": "rectangle_rational_slope",
+  "geometry": "rectangle",
+  "width": 12.0,
+  "height": 8.0,
+  "ball_radius": 0.3,
+  "start_x": 3.0,
+  "start_y": 3.0,
+  "launch_angle_deg": 53.1301023542,
+  "speed": 2.5,
+  "max_time": 18.0,
+  "reflection_mode": "elastic",
+  "description": "Rational-slope rectangular orbit using a 4:3 direction ratio. This creates a repeating lattice-style path.",
+  "command": "PYTHONPATH=src python src/cli.py --geometry rectangle --width 12 --height 8 --ball-radius 0.3 --start-x 3 --start-y 3 --launch-angle-deg 53.1301023542 --speed 2.5 --max-time 18 --reflection-mode elastic"
+}

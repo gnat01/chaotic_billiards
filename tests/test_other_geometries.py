@@ -39,6 +39,26 @@ def test_triangle_contains_ball_and_hits_base() -> None:
     assert event.boundary_label == "base"
 
 
+def test_triangle_symmetry_axis_apex_hit_reflects_off_both_slopes() -> None:
+    geometry = Triangle(width=10.0, height=8.0)
+    initial_state = BallState(position=(5.0, 2.0), velocity=(0.0, 2.5), radius=0.25)
+
+    result = run_simulation(
+        initial_state=initial_state,
+        geometry=geometry,
+        config=SimulationConfig(max_time=6.0, max_collisions=4),
+    )
+
+    assert result.collisions
+    first_collision = result.collisions[0]
+    assert first_collision.boundary_label == "left_slope+right_slope"
+    assert math.isclose(first_collision.center_at_contact[0], 5.0)
+    assert math.isclose(first_collision.center_at_contact[1], 7.52830094339717, rel_tol=1e-9)
+    assert math.isclose(result.states[1].velocity[0], 0.0, abs_tol=1e-9)
+    assert result.states[1].velocity[1] < 0.0
+    assert geometry.contains_ball(result.final_state.position, initial_state.radius)
+
+
 def test_sinai_excludes_obstacle_and_detects_obstacle_contact() -> None:
     geometry = SinaiTable(width=10.0, height=6.0, obstacle_radius=1.0, obstacle_center=(5.0, 3.0))
 

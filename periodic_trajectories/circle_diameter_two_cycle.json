@@ -1,0 +1,14 @@
+{
+  "name": "circle_diameter_two_cycle",
+  "geometry": "circle",
+  "circle_radius": 5.0,
+  "ball_radius": 0.35,
+  "start_x": 5.0,
+  "start_y": 5.0,
+  "launch_angle_deg": 0.0,
+  "speed": 3.0,
+  "max_time": 12.0,
+  "reflection_mode": "elastic",
+  "description": "Diameter orbit through the center of the circle. This gives a simple two-point periodic path.",
+  "command": "PYTHONPATH=src python src/cli.py --geometry circle --circle-radius 5 --ball-radius 0.35 --start-x 5 --start-y 5 --launch-angle-deg 0 --speed 3 --max-time 12 --reflection-mode elastic"
+}

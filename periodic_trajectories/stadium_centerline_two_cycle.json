@@ -1,0 +1,15 @@
+{
+  "name": "stadium_centerline_two_cycle",
+  "geometry": "stadium",
+  "width": 12.0,
+  "height": 6.0,
+  "ball_radius": 0.35,
+  "start_x": 6.0,
+  "start_y": 3.0,
+  "launch_angle_deg": 0.0,
+  "speed": 3.0,
+  "max_time": 12.0,
+  "reflection_mode": "elastic",
+  "description": "Centerline stadium orbit between the semicircular endcaps. This is periodic but unstable under perturbation, which makes it educational.",
+  "command": "PYTHONPATH=src python src/cli.py --geometry stadium --width 12 --height 6 --ball-radius 0.35 --start-x 6 --start-y 3 --launch-angle-deg 0 --speed 3 --max-time 12 --reflection-mode elastic"
+}

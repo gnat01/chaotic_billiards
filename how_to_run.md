@@ -23,6 +23,15 @@ That launches the default animation:
 - max time: `12`
 - reflection mode: `elastic`
 
+You can now also drive the launch by angle:
+
+- `0` degrees: right
+- `90` degrees: up
+- `180` degrees: left
+- `270` degrees: down
+
+Periodic examples live in [periodic_trajectories/README.md](/Users/gn/work/learn/python/chaotic_billiards/periodic_trajectories/README.md).
+
 ## Common Examples
 
 Rectangle, elastic:
@@ -37,6 +46,22 @@ PYTHONPATH=src python src/cli.py \
   --start-y 2.0 \
   --vx 3.0 \
   --vy 1.75 \
+  --max-time 12 \
+  --reflection-mode elastic
+```
+
+Rectangle, angle-driven:
+
+```bash
+PYTHONPATH=src python src/cli.py \
+  --geometry rectangle \
+  --width 12 \
+  --height 7 \
+  --ball-radius 0.35 \
+  --start-x 2.0 \
+  --start-y 2.0 \
+  --launch-angle-deg 30 \
+  --speed 3.5 \
   --max-time 12 \
   --reflection-mode elastic
 ```
@@ -405,6 +430,8 @@ Notes:
 - `0` is allowed
 - if both `vx` and `vy` are `0`, the run will stop immediately on min-speed logic
 - larger magnitudes make the animation feel faster, but can make runs visually busy
+- ignored for launch direction if `--launch-angle-deg` is provided
+- if `--launch-angle-deg` is provided and `--speed` is omitted, the CLI uses `sqrt(vx^2 + vy^2)` as the speed
 
 ### `--vy`
 
@@ -429,6 +456,61 @@ Recommended range:
 Notes:
 
 - same considerations as `--vx`
+
+### `--launch-angle-deg`
+
+Type: float
+
+Default:
+
+- `None`
+
+Hard constraint:
+
+- must be between `0` and `359`, inclusive
+
+Meaning:
+
+- sets the initial launch direction in degrees
+- `0` points right
+- `90` points up
+- `180` points left
+- `270` points down
+
+Recommended range:
+
+- the full supported range is valid
+
+Notes:
+
+- when this is provided, the CLI computes `vx, vy` from angle and speed
+- this works for all geometries
+- this is the easiest way to explore periodic and near-periodic trajectories
+
+### `--speed`
+
+Type: float or omitted
+
+Default:
+
+- `None`
+
+Hard constraint:
+
+- if provided, must be `> 0`
+
+Meaning:
+
+- launch speed magnitude used together with `--launch-angle-deg`
+
+Recommended range:
+
+- `1` to `6`
+
+Notes:
+
+- if omitted while `--launch-angle-deg` is set, the CLI infers speed from the current `vx, vy`
+- this gives backward compatibility with existing commands
 
 ### `--max-time`
 
@@ -626,6 +708,21 @@ Good starting combinations:
 - moderate speed `sqrt(vx^2 + vy^2)` around `2` to `6`
 - `max-time` around `8` to `20`
 
+### Launch angle and speed
+
+This is the cleanest way to explore:
+
+- periodic trajectories
+- symmetric launches
+- perturbations off stable-looking paths
+
+Examples:
+
+- `0`: horizontal launches
+- `45`: square diagonals
+- `90`: symmetry-axis launches in triangle-like setups
+- small perturbations like `44` or `46` are useful for sensitivity experiments
+
 ### Inelastic mode and restitution
 
 If `reflection-mode` is `inelastic` and `restitution` is low:
@@ -781,6 +878,8 @@ PYTHONPATH=src python src/cli.py \
   --start-y FLOAT \
   --vx FLOAT \
   --vy FLOAT \
+  --launch-angle-deg FLOAT \
+  --speed FLOAT \
   --max-time FLOAT \
   --max-collisions INT \
   --reflection-mode elastic|inelastic \

@@ -1,0 +1,14 @@
+{
+  "name": "square_horizontal_two_cycle",
+  "geometry": "square",
+  "side_length": 10.0,
+  "ball_radius": 0.35,
+  "start_x": 5.0,
+  "start_y": 5.0,
+  "launch_angle_deg": 0.0,
+  "speed": 3.0,
+  "max_time": 12.0,
+  "reflection_mode": "elastic",
+  "description": "Horizontal centerline orbit. The ball bounces between left and right walls in a simple two-cycle.",
+  "command": "PYTHONPATH=src python src/cli.py --geometry square --side-length 10 --ball-radius 0.35 --start-x 5 --start-y 5 --launch-angle-deg 0 --speed 3 --max-time 12 --reflection-mode elastic"
+}

@@ -1,0 +1,14 @@
+{
+  "name": "square_diagonal_four_cycle",
+  "geometry": "square",
+  "side_length": 10.0,
+  "ball_radius": 0.35,
+  "start_x": 5.0,
+  "start_y": 5.0,
+  "launch_angle_deg": 45.0,
+  "speed": 3.0,
+  "max_time": 12.0,
+  "reflection_mode": "elastic",
+  "description": "Classic square diagonal orbit. With a centered launch at 45 degrees, the path repeats through the four sides.",
+  "command": "PYTHONPATH=src python src/cli.py --geometry square --side-length 10 --ball-radius 0.35 --start-x 5 --start-y 5 --launch-angle-deg 45 --speed 3 --max-time 12 --reflection-mode elastic"
+}
