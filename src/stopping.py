@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from chaotic_billiards.types import BallState, SimulationConfig
+from model import BallState, SimulationConfig
 
 
 def speed(velocity: tuple[float, float]) -> float:

@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import math
 
-from chaotic_billiards.geometry.base import Geometry
-from chaotic_billiards.simulation.engine import run_simulation
-from chaotic_billiards.types import BallState, CollisionEvent, SimulationConfig
+from engine import run_simulation
+from geometry import Geometry
+from model import BallState, CollisionEvent, SimulationConfig
 
 
 class OneDimensionalCorridor(Geometry):

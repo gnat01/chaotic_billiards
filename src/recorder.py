@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from chaotic_billiards.types import BallState, CollisionEvent, RunResult
+from model import BallState, CollisionEvent, RunResult
 
 
 class SimulationRecorder:

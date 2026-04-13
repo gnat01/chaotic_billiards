@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from chaotic_billiards.types import Vec2
+from model import Vec2
 
 
 def dot(a: Vec2, b: Vec2) -> float:

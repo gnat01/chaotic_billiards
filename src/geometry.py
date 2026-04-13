@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
-from chaotic_billiards.types import CollisionEvent, Vec2
+from model import CollisionEvent, Vec2
 
 
 class Geometry(ABC):

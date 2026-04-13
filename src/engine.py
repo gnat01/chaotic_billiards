@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from chaotic_billiards.geometry.base import Geometry
-from chaotic_billiards.physics.reflection import reflect_specular
-from chaotic_billiards.simulation.recorder import SimulationRecorder
-from chaotic_billiards.simulation.stopping import should_stop
-from chaotic_billiards.types import BallState, CollisionEvent, RunResult, SimulationConfig
+from geometry import Geometry
+from model import BallState, CollisionEvent, RunResult, SimulationConfig
+from recorder import SimulationRecorder
+from reflection import reflect_specular
+from stopping import should_stop
 
 
 def _advance_without_collision(state: BallState, delta_t: float) -> BallState:
