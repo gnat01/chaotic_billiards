@@ -1,0 +1,9 @@
+The classic chaotic billiards problem
+
+- Showing periodic trajectories
+- Showing sensitive dependence to initial conditions and chaos
+- Varying geometries : Square, circular, triangular, rectangular, diamond, irregular
+- Going from elastic to inelastic scattering so in the latter the billiards ball loses energy as it bounces and even when it moves along the table
+- Tracking a lsew of metrics - velocity, position, energy in system, number of bounces per unit time, Lyapunov exponent, fractal dimension of trajectory traced
+
+
