@@ -25,7 +25,23 @@ The project should answer these questions:
 
 ## System Definition
 
-Model a point particle moving in straight lines inside a closed 2D domain.
+Model a finite-radius billiard ball moving in straight lines inside a closed 2D domain.
+
+Use a ball radius `r > 0`, not a point-mass idealization. This is the better choice here for two reasons:
+
+- it is closer to the actual billiards intuition
+- it produces much better visual output because the moving object and its near-wall behavior read clearly on screen
+
+Numerically, this means the simulated center of the ball moves inside the geometry eroded inward by radius `r`, or equivalently the collision system must compute contact between the finite ball and the original table boundary.
+
+For now, treat the ball as a translating disk only:
+
+- no spin
+- no rolling
+- no angular momentum
+- no rotational kinetic energy
+
+That keeps the model simpler and is enough for the visual and dynamical goals of this project.
 
 At boundary collision:
 
@@ -71,8 +87,10 @@ The original note mentioned "irregular"; this should be made concrete as at leas
 
 Start with the simplest defensible model:
 
-- point particle
+- finite-radius rigid disk in 2D
+- translation only, no rotational state
 - 2D position and velocity
+- fixed ball radius as a first step
 - exact or numerically stable wall intersection
 - specular reflection for elastic collisions
 - fixed time step only for visualization, not for collision detection if avoidable
@@ -80,11 +98,13 @@ Start with the simplest defensible model:
 Preferred approach:
 
 - use event-based collision handling where possible
-- compute the next boundary intersection
+- compute the next ball-boundary contact event
 - advance directly to the collision
 - then update velocity
 
 This avoids major artifacts from naive time stepping.
+
+For polygons, the simplest robust approach is to evolve the center against an inward-offset table boundary. For circles and curved boundaries, compute contact using the ball radius explicitly.
 
 ## Dissipative Variants
 
@@ -101,6 +121,8 @@ Expected outcomes:
 - drag collapses long-run motion toward rest
 - inelastic wall collisions reduce energy at impacts
 - combined dissipation may produce rapid settling or attractor-like path concentration
+
+All of these statements refer only to translational kinetic energy in the current scope.
 
 ## Metrics
 
@@ -166,7 +188,7 @@ Do this in:
 - a baseline regular geometry
 - a chaotic geometry such as stadium or Sinai
 
-The contrast is the point.
+The contrast is the goal.
 
 ### 3. Geometry comparison
 
@@ -316,14 +338,21 @@ The end-to-end project should produce:
 Use these checks:
 
 - speed conservation in elastic no-drag runs
-- correct reflection angles on flat walls
+- correct reflection angles on flat walls for the ball center trajectory
 - known symmetric or periodic trajectories in square/circle
 - monotone energy decrease in dissipative runs
 - stable qualitative behavior under smaller plotting step sizes
 
+Add ball-specific checks:
+
+- the ball never visually penetrates the boundary
+- corner and curved-wall contacts remain numerically stable
+- changing ball radius changes accessible motion in expected ways
+
 ## Risks
 
 - naive time stepping may miss collisions or create fake chaos
+- finite-radius corner handling can be trickier than point-particle geometry
 - poorly defined irregular boundaries may make collision handling brittle
 - Lyapunov estimates can be noisy and misleading if renormalization is not handled carefully
 - fractal-dimension claims can become hand-wavy unless tightly specified
@@ -339,6 +368,7 @@ If this needs to be scoped tightly for a first version, build:
 - elastic mode
 - optional drag
 - trajectory plots
+- ball-rendered trajectory and animation output
 - nearby-trajectory divergence plot
 - energy and bounce-rate metrics
 
@@ -354,6 +384,7 @@ Leave these for later:
 This project should be framed as a progression:
 
 - start from regular billiards
+- use a visible finite-radius ball, not an invisible point abstraction
 - add reliable geometry handling
 - introduce chaotic benchmark geometries
 - compare nearby initial conditions
